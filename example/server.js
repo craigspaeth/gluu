@@ -1,15 +1,18 @@
+import bluebird from 'bluebird'
+global.Promise = bluebird
+
 import Koa from 'koa'
 import graphqlHTTP from 'koa-graphql'
-import router from './router'
+import convert from 'koa-convert'
 import model from './model'
+import router from './router'
 
 const app = new Koa()
 
-router.get('/api', graphqlHTTP({
+router.all('/api', convert(graphqlHTTP({
   schema: model.schema,
   graphiql: true
-}))
-app.use(router.routes())
-
+})))
+app.use(router.routes()).use(router.allowedMethods())
 app.listen(3000)
 console.log('Listening')
