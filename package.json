@@ -1,0 +1,55 @@
+{
+  "name": "gluu",
+  "version": "1.0.0",
+  "description": "",
+  "main": "client.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node -r babel-core/register example/server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "standard": {
+    "parser": "babel-eslint"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-3"
+    ],
+    "plugins": [
+      "transform-runtime"
+    ]
+  },
+  "dependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.13.0",
+    "babel-plugin-transform-runtime": "^6.12.0",
+    "babel-preset-es2015": "^6.13.0",
+    "babel-preset-stage-3": "^6.11.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.0",
+    "graphql": "^0.6.2",
+    "joi": "^9.0.4",
+    "joi-objectid": "^2.0.0",
+    "joiql": "0.0.3",
+    "koa": "^2.0.0-alpha.4",
+    "koa-browserify-middleware": "^1.0.0",
+    "koa-graphql": "^0.5.5",
+    "lokka": "^1.7.0",
+    "lokka-transport-http": "^1.4.0",
+    "promised-mongo": "^1.2.0",
+    "react": "^15.3.0",
+    "react-dom": "^15.3.0",
+    "superagent": "^2.1.0",
+    "unikoa": "0.0.1",
+    "unikoa-bootstrap": "0.0.1",
+    "unikoa-react-render": "0.0.1",
+    "universal-tree": "0.0.1",
+    "veact": "0.0.2"
+  },
+  "devDependencies": {
+    "babel-eslint": "^6.1.2",
+    "standard": "^7.1.2"
+  }
+}
