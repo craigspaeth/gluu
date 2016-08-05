@@ -1,8 +1,9 @@
-import objectid from 'joi-objectid'
-import { object, string } from 'joi'
+import joiObjectId from 'joi-objectid'
+import Joi, { object, string } from 'joi'
 import joiql from 'joiql'
 import mongo from 'promised-mongo'
 
+const objectid = joiObjectId(Joi)
 const db = mongo('mongodb://localhost:27017/gluu', ['articles'])
 
 const articleAttrs = {
@@ -16,7 +17,7 @@ const api = joiql({
     articles: object(articleAttrs)
   },
   mutation: {
-    article: object(articleAttrs).meta({ args: object(articleAttrs) })
+    article: object(articleAttrs).meta({ args: articleAttrs })
   }
 })
 
