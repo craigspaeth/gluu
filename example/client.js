@@ -1,1 +1,3 @@
-alert('TBD')
+import { router } from '../'
+
+router.routes()

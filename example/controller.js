@@ -7,12 +7,14 @@ const api = new Lokka({
 })
 
 export const state = tree({
+  article: null,
   articles: []
 })
 
 export const show = async (ctx, next) => {
-  const articles = await ctx.bootstrap(() =>
-    api.query(`{ article(id: ${ctx.params.id}) { title } }`)
+  const { article } = await ctx.bootstrap(() =>
+    api.query(`{ article(_id: "${ctx.params.id}") { title body } }`)
   )
-  state.set('articles', articles)
+  state.set('article', article)
+  ctx.render('index')
 }
