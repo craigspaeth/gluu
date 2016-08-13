@@ -9,29 +9,38 @@ const bootstrap = require('unikoa-bootstrap')
 const render = require('unikoa-react-render')
 const Joi = require('joi')
 const joiql = require('joiql')
-const mongojs = require('mongojs')
+const mongo = require('promised-mongo')
 const _ = require('lodash')
 const pluralize = require('pluralize')
+const Lokka = require('lokka').Lokka
+const Transport = require('lokka-transport-http').Transport
+const tree = require('universal-tree')
 
 const appDir = path.dirname(module.parent.filename)
 const appBase = path.parse(appDir).base
 const isServer = typeof window === 'undefined'
 const joiqlHash = { query: {}, mutation: {} }
+const middlewares = []
 
 const objectid = require('joi-objectid')(Joi)
-const db = mongojs('mongodb://localhost:27017/gluu', ['articles'])
-const app = new Koa()
-const router = unikoa()
+const db = mongo('mongodb://localhost:27017/gluu', ['articles'])
+const api = new Lokka({
+  transport: new Transport('http://localhost:3000/api')
+})
 
 // Use Bluebird for promises
 if (isServer) global.Promise = Bluebird
 else window.Promise = Bluebird
 
 // Routing
+const router = unikoa()
 router.use(bootstrap)
 router.use((ctx, next) => {
   ctx.render = (viewName) => {
-    const body = require(path.resolve(appBase, 'views', viewName + '.js')).default
+    const body = require(path.resolve(
+      appBase,
+      'views', viewName + '.js'
+    )).default
     render({
       head: () => '',
       body: body,
@@ -41,44 +50,60 @@ router.use((ctx, next) => {
   return next()
 })
 
-// Middleware
-const api = joiql(joiqlHash)
-api.on('query mutation', async ({ req }) => {
-  _.each(req, (field) => { field.args._id = mongojs.ObjectId(field.args._id) })
-})
-router.all('/api', convert(graphqlHTTP({
-  schema: api.schema,
-  graphiql: true
-})))
-app.use(router.routes()).use(router.allowedMethods())
-app.use(browserify(
-  { src: path.resolve(appDir, '../') }
-))
+// JoiQL
+middlewares.push(['query mutation', ({ req }) => {
+  _.each(req, (field) => {
+    // Inspect meta info to determine if objectId, e.g. in case of `authorId`
+    if (field.args._id) field.args._id = mongo.ObjectId(field.args._id)
+  })
+  return Promise.resolve()
+}])
+
+// Init app with routing and middleware
+const app = () => {
+  const server = new Koa()
+  const graphQLAPI = joiql(joiqlHash)
+  middlewares.forEach(([route, middleware]) => graphQLAPI.on(route, middleware))
+  router.all('/api', convert(graphqlHTTP({
+    schema: graphQLAPI.schema,
+    graphiql: true
+  })))
+  server.use(router.routes()).use(router.allowedMethods())
+  server.use(browserify({ src: path.resolve(appDir, '../') }))
+  return server
+}
 
 // Model JoiQL wrapper
 const model = (name, attrs) => {
   const plural = pluralize(name)
-  joiqlHash.query[name] = Joi.object(attrs).meta({ args: attrs })
-  joiqlHash.query[name] = Joi.array().items(Joi.object(attrs))
-  joiqlHash.mutation[name] = Joi.object(attrs).meta({ args: attrs })
-  api.on(`query.${name}`, ({ req, res }) => {
+  joiqlHash.query[name] = Joi
+    .object(attrs)
+    .meta({ args: attrs })
+  joiqlHash.query[plural] = Joi.array()
+    .items(Joi.object(attrs))
+    .meta({ args: attrs })
+  joiqlHash.mutation[name] = Joi.object(attrs)
+    .meta({ args: attrs })
+  middlewares.push([`query.${name}`, ({ req, res }) =>
     db[plural].findOne({ _id: req.args._id }).then((doc) => { res[name] = doc })
-  })
-  api.on(`query.${plural}`, ({ req, res }) => {
-    db[plural].find().then((docs) => { res[plural] = docs })
-  })
-  api.on(`mutation.${name}`, ({ req, res }) => {
+  ])
+  middlewares.push([`query.${plural}`, ({ req, res }) =>
+    db[plural].find(req.args).then((docs) => { res[plural] = docs })
+  ])
+  middlewares.push([`mutation.${name}`, ({ req, res }) =>
     db.articles.save(req.args).then((doc) => { res[name] = doc })
-  })
+  ])
   return {
-    pre: () => console.log('add to middleware'),
-    post: () => console.log('add to middleware')
+    pre: () => console.log('add to middlewares'),
+    post: () => console.log('add to middlewares')
   }
 }
 
 // Export stuff
 module.exports = {
   app: app,
+  api: api,
+  tree: tree,
   router: router,
   objectid: objectid,
   object: Joi.object,
