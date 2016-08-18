@@ -10,7 +10,6 @@ const render = require('unikoa-react-render')
 const Joi = require('joi')
 const joiql = require('joiql')
 const mongo = require('promised-mongo')
-const _ = require('lodash')
 const pluralize = require('pluralize')
 const Lokka = require('lokka').Lokka
 const Transport = require('lokka-transport-http').Transport
@@ -22,7 +21,16 @@ const isServer = typeof window === 'undefined'
 const joiqlHash = { query: {}, mutation: {} }
 const middlewares = []
 
-const objectid = require('joi-objectid')(Joi)
+const objectid = Joi.extend({
+  base: Joi.string(),
+  name: 'string',
+  pre: (val, state, options) => {
+    console.log('preeee', mongo.ObjectId(val), val)
+    if (options.convert) return mongo.ObjectId(val)
+    else return val
+  }
+}).string
+
 const db = mongo('mongodb://localhost:27017/gluu', ['articles'])
 const api = new Lokka({
   transport: new Transport('http://localhost:3000/api')
@@ -50,15 +58,6 @@ router.use((ctx, next) => {
   return next()
 })
 
-// JoiQL
-middlewares.push(['query mutation', ({ req }) => {
-  _.each(req, (field) => {
-    // Inspect meta info to determine if objectId, e.g. in case of `authorId`
-    if (field.args._id) field.args._id = mongo.ObjectId(field.args._id)
-  })
-  return Promise.resolve()
-}])
-
 // Init app with routing and middleware
 const app = () => {
   const server = new Koa()
@@ -84,9 +83,9 @@ const model = (name, attrs) => {
     .meta({ args: attrs })
   joiqlHash.mutation[name] = Joi.object(attrs)
     .meta({ args: attrs })
-  middlewares.push([`query.${name}`, ({ req, res }) =>
-    db[plural].findOne({ _id: req.args._id }).then((doc) => { res[name] = doc })
-  ])
+  middlewares.push([`query.${name}`, ({ req, res }) => {
+    return db[plural].findOne({ _id: req.args._id }).then((doc) => { res[name] = doc })
+  }])
   middlewares.push([`query.${plural}`, ({ req, res }) =>
     db[plural].find(req.args).then((docs) => { res[plural] = docs })
   ])

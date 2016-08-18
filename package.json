@@ -5,7 +5,8 @@
   "main": "client.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node -r babel-core/register example/server.js"
+    "server": "node -r babel-core/register example/server.js",
+    "start": "nodemon --exec 'npm run server'"
   },
   "author": "",
   "license": "ISC",
@@ -31,6 +32,8 @@
     "bluebird": "^3.4.1",
     "browserify": "^13.1.0",
     "browserify-dev-middleware": "^1.0.0",
+    "chokidar": "^1.6.0",
+    "glob": "^7.0.5",
     "graphql": "^0.6.2",
     "joi": "^9.0.4",
     "joi-objectid": "^2.0.0",

@@ -10,12 +10,13 @@ export const show = async (ctx, next) => {
     const article = await api.query(`{
       article(_id: "${ctx.params.id}") { title body }
     }`)
-    const { comments, author } = await Promise.all(
-      api.query(`{ comments(articleId: "${article._id}") { body } }`),
-      api.query(`{ author(_id: "${article.authorId}") { name } }`)
-    )
-    return { article, comments, author }
+    // const { comments, author } = await Promise.all(
+    //   api.query(`{ comments(articleId: "${article._id}") { body } }`),
+    //   api.query(`{ author(_id: "${article.authorId}") { name } }`)
+    // )
+    return { article, comments: [], author: {} }
   })
-  state.set({ article, comments, author })
+  console.log('set', article)
+  state.set('article', article)
   ctx.render('index')
 }
