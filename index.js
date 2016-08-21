@@ -18,9 +18,6 @@ const tree = require('universal-tree')
 const appDir = path.dirname(module.parent.filename)
 const appBase = path.parse(appDir).base
 const isServer = typeof window === 'undefined'
-const joiqlHash = { query: {}, mutation: {} }
-const middlewares = []
-
 const objectid = Joi.extend({
   base: Joi.string(),
   name: 'string',
@@ -29,7 +26,6 @@ const objectid = Joi.extend({
     else return val
   }
 }).string
-
 const db = mongo('mongodb://localhost:27017/gluu', ['articles'])
 const api = new Lokka({
   transport: new Transport('http://localhost:3000/api')
@@ -63,19 +59,16 @@ const router = () => {
 // Init app with routing and middleware
 const app = (router) => {
   const app = new Koa()
-  const graphQLAPI = joiql(joiqlHash)
-  middlewares.forEach(([route, middleware]) => graphQLAPI.on(route, middleware))
-  router.all('/api', convert(graphqlHTTP({
-    schema: graphQLAPI.schema,
-    graphiql: true
-  })))
   app.use(router.routes())
   app.use(browserify({ src: path.resolve(appDir, '../') }))
   return app
 }
 
 // Model JoiQL wrapper
-const model = (name, attrs) => {
+const model = (name, _attrs) => {
+  const joiqlHash = { query: {}, mutation: {} }
+  const middlewares = []
+  const attrs = Object.assign({ _id: objectid() }, _attrs)
   const plural = pluralize(name)
   joiqlHash.query[name] = Joi
     .object(attrs)
@@ -93,12 +86,31 @@ const model = (name, attrs) => {
     db[plural].find(req.args).then((docs) => { res[plural] = docs })
   ])
   middlewares.push([`mutation.${name}`, ({ req, res }) =>
-    db.articles.save(req.args).then((doc) => { res[name] = doc })
+    db[plural].save(req.args).then((doc) => { res[name] = doc })
   ])
   return {
     pre: () => console.log('add to middlewares'),
-    post: () => console.log('add to middlewares')
+    post: () => console.log('add to middlewares'),
+    joiqlHash: joiqlHash,
+    middlewares: middlewares
   }
+}
+
+// Convert a bunch of models into GraphQL middleware
+const models = (models) => {
+  const middlewares = []
+  const joiqlHash = { query: {}, mutation: {} }
+  Object.values(models).forEach((model) => {
+    Object.assign(joiqlHash.query, model.joiqlHash.query)
+    Object.assign(joiqlHash.mutation, model.joiqlHash.mutation)
+    middlewares.push(...model.middlewares)
+  })
+  const graphQLAPI = joiql(joiqlHash)
+  middlewares.forEach(([route, middleware]) => graphQLAPI.on(route, middleware))
+  return convert(graphqlHTTP({
+    schema: graphQLAPI.schema,
+    graphiql: true
+  }))
 }
 
 // Export stuff
@@ -114,5 +126,6 @@ module.exports = {
   array: Joi.array,
   boolean: Joi.boolean,
   date: Joi.date,
-  model: model
+  model: model,
+  models: models
 }

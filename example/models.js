@@ -1,7 +1,11 @@
 import { string, objectid, model } from '../'
 
-model('article', {
-  _id: objectid(),
+export const article = model('article', {
+  authorId: objectid(),
   title: string(),
   body: string()
+})
+
+export const author = model('author', {
+  name: string()
 })
