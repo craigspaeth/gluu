@@ -1,7 +1,7 @@
 import './models'
-import { app, router } from '../'
-import * as controller from './controller'
+import { app } from '../'
+import router from './router'
 
-router.get('/article/:id', controller.show)
+const server = app(router)
 
-export default app()
+export default server

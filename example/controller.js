@@ -5,18 +5,10 @@ export const state = tree({
   articles: []
 })
 
-export const show = async (ctx, next) => {
-  const { article, comments, author } = await ctx.bootstrap(async () => {
-    const article = await api.query(`{
-      article(_id: "${ctx.params.id}") { title body }
-    }`)
-    // const { comments, author } = await Promise.all(
-    //   api.query(`{ comments(articleId: "${article._id}") { body } }`),
-    //   api.query(`{ author(_id: "${article.authorId}") { name } }`)
-    // )
-    return { article, comments: [], author: {} }
-  })
-  console.log('set', article)
+export const show = async (ctx, id, next) => {
+  const article = await ctx.bootstrap(() => api.query(`{
+    article(_id: "${id}") { title body }
+  }`))
   state.set('article', article)
   ctx.render('index')
 }

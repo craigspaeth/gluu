@@ -2,7 +2,7 @@ const Bluebird = require('bluebird')
 const Koa = require('koa')
 const graphqlHTTP = require('koa-graphql')
 const convert = require('koa-convert')
-const browserify = require('./b-middleware')
+const browserify = require('./lib/b-middleware')
 const path = require('path')
 const unikoa = require('unikoa')
 const bootstrap = require('unikoa-bootstrap')
@@ -25,7 +25,6 @@ const objectid = Joi.extend({
   base: Joi.string(),
   name: 'string',
   pre: (val, state, options) => {
-    console.log('preeee', mongo.ObjectId(val), val)
     if (options.convert) return mongo.ObjectId(val)
     else return val
   }
@@ -41,35 +40,38 @@ if (isServer) global.Promise = Bluebird
 else window.Promise = Bluebird
 
 // Routing
-const router = unikoa()
-router.use(bootstrap)
-router.use((ctx, next) => {
-  ctx.render = (viewName) => {
-    const body = require(path.resolve(
-      appBase,
-      'views', viewName + '.js'
-    )).default
-    render({
-      head: () => '',
-      body: body,
-      scripts: [`${appBase}/client.js`]
-    })(ctx, next)
-  }
-  return next()
-})
+const router = () => {
+  const router = unikoa()
+  router.use(bootstrap)
+  router.use((ctx, next) => {
+    ctx.render = (viewName) => {
+      const body = require(path.resolve(
+        appBase,
+        'views', viewName + '.js'
+      )).default
+      render({
+        head: () => '',
+        body: body,
+        scripts: [`${appBase}/client.js`]
+      })(ctx, next)
+    }
+    return next()
+  })
+  return router
+}
 
 // Init app with routing and middleware
-const app = () => {
-  const server = new Koa()
+const app = (router) => {
+  const app = new Koa()
   const graphQLAPI = joiql(joiqlHash)
   middlewares.forEach(([route, middleware]) => graphQLAPI.on(route, middleware))
   router.all('/api', convert(graphqlHTTP({
     schema: graphQLAPI.schema,
     graphiql: true
   })))
-  server.use(router.routes()).use(router.allowedMethods())
-  server.use(browserify({ src: path.resolve(appDir, '../') }))
-  return server
+  app.use(router.routes())
+  app.use(browserify({ src: path.resolve(appDir, '../') }))
+  return app
 }
 
 // Model JoiQL wrapper
@@ -84,7 +86,8 @@ const model = (name, attrs) => {
   joiqlHash.mutation[name] = Joi.object(attrs)
     .meta({ args: attrs })
   middlewares.push([`query.${name}`, ({ req, res }) => {
-    return db[plural].findOne({ _id: req.args._id }).then((doc) => { res[name] = doc })
+    return db[plural].findOne({ _id: req.args._id })
+      .then((doc) => { res[name] = doc })
   }])
   middlewares.push([`query.${plural}`, ({ req, res }) =>
     db[plural].find(req.args).then((docs) => { res[plural] = docs })
