@@ -8,12 +8,12 @@ view.on('componentDidMount', ({ refs }) => {
   refs.input.focus()
 })
 
-view.render(() => {
-  return div(
+view.render(() =>
+  div(
     h1('New Tweet'),
     form({ onSubmit: createTweet },
       input({ onChange: updateTweet, ref: 'input' }),
       button('Submit')))
-})
+)
 
 export default view()
