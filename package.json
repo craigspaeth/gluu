@@ -62,7 +62,7 @@
     "unikoa-bootstrap": "0.0.2",
     "unikoa-react-render": "0.0.1",
     "universal-tree": "0.0.1",
-    "veact": "0.0.4"
+    "veact": "0.0.5"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.2",
