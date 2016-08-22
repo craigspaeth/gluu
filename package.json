@@ -5,8 +5,7 @@
   "main": "client.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "node -r babel-core/register example/server.js",
-    "start": "nodemon --exec 'npm run server'"
+    "start": "node lib/reloader"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +21,9 @@
       "transform-runtime"
     ]
   },
+  "browser": {
+    "./index.js": "./browser.js"
+  },
   "dependencies": {
     "babel": "^6.5.2",
     "babel-core": "^6.13.0",
@@ -32,6 +34,7 @@
     "bluebird": "^3.4.1",
     "browserify": "^13.1.0",
     "browserify-dev-middleware": "^1.0.0",
+    "browserify-hmr": "^0.3.1",
     "chokidar": "^1.6.0",
     "glob": "^7.0.5",
     "graphql": "^0.6.2",
@@ -53,15 +56,17 @@
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
     "server-destroy": "^1.0.1",
+    "socket.io": "^1.4.8",
     "superagent": "^2.1.0",
     "unikoa": "0.0.1",
-    "unikoa-bootstrap": "0.0.1",
+    "unikoa-bootstrap": "0.0.2",
     "unikoa-react-render": "0.0.1",
     "universal-tree": "0.0.1",
-    "veact": "0.0.2"
+    "veact": "0.0.4"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.2",
+    "should": "^11.1.0",
     "standard": "^7.1.2"
   }
 }

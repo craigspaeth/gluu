@@ -1,5 +1,5 @@
-import { router as newrouter } from '../'
-import * as controller from './controller'
+import { router as newrouter } from '../../'
+import * as controller from './controllers'
 
 const router = newrouter()
 

@@ -1,4 +1,5 @@
-import { tree, api } from '../'
+import { tree, api } from '../../../'
+import index from '../views'
 
 export const state = tree({
   article: null,
@@ -17,5 +18,5 @@ export const show = async (ctx, id, next) => {
   })
   state.set('article', article)
   state.select('article').set('author', author)
-  ctx.render('index')
+  ctx.render(index)
 }

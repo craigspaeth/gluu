@@ -1,4 +1,4 @@
-import { string, objectid, model } from '../'
+import { string, objectid, model } from '../../../'
 
 export const article = model('article', {
   authorId: objectid(),
