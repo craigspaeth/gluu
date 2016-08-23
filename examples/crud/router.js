@@ -1,10 +1,10 @@
 import { router as newrouter } from '../../'
-import * as controller from './controllers'
+import { list, newTweet, show } from './controllers'
 
 const router = newrouter()
 
-router.get('/tweets', controller.list)
-router.get('/tweets/new', controller.newTweet)
-router.get('/tweets/:id', controller.show)
+router.get('/tweets', list)
+router.get('/tweets/new', newTweet)
+router.get('/tweets/:id', show)
 
 export default router

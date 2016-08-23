@@ -1,12 +1,13 @@
 import { view as newview } from '../../../'
 import { state, deleteTweet } from '../controllers'
+import Header from './header'
 
 const view = newview()
-const { ul, li, div, h1, a } = view.els()
+const { ul, li, div, h1, a, header } = view.els({ header: Header })
 
 view.render(() =>
   div(
-    a({ href: '/tweets/new' }, 'New tweet'),
+    header(),
     h1('Tweets'),
     ul(
       state.get('tweets').map((tweet) =>

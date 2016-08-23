@@ -17,8 +17,11 @@ const fs = require('fs')
 const browserify = require('./lib/b-middleware')
 const veact = require('veact')
 const { capitalize } = require('lodash')
+const React = require('react')
+const cssReset = require('./lib/reset.js')
 
 // Vars
+const $ = React.DOM
 const appDir = path.dirname(module.parent.filename)
 const appBase = path.parse(appDir).base
 const isServer = typeof window === 'undefined'
@@ -52,7 +55,7 @@ const router = () => {
   router.use((ctx, next) => {
     ctx.render = (body) => {
       render({
-        head: () => '',
+        head: () => $.style({}, cssReset),
         body: body,
         scripts: [
           `/${appBase}/client.js`,

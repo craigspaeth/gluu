@@ -60,7 +60,7 @@
     "superagent": "^2.1.0",
     "unikoa": "0.0.1",
     "unikoa-bootstrap": "0.0.2",
-    "unikoa-react-render": "0.0.1",
+    "unikoa-react-render": "0.0.2",
     "universal-tree": "0.0.1",
     "veact": "0.0.5"
   },
