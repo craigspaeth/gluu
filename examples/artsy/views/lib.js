@@ -1,7 +1,10 @@
+import { assign } from 'lodash'
+
 export const largeMargin = 50
 export const mediumMargin = 30
 export const smallMargin = 20
 export const graySemibold = '#666666'
+export const purpleRegular = '#6e1fff'
 
 export const type = (family, size = 'body') => {
   if (family === 'garamond') {
@@ -34,3 +37,11 @@ export const type = (family, size = 'body') => {
     }
   }
 }
+
+export const button = (kind) => ({
+  follow: assign(type('garamond', 'body'), {
+    background: 'transparent',
+    border: 0,
+    padding: 0
+  })
+}[kind])

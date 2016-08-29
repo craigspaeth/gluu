@@ -16,6 +16,19 @@ export const show = model('show', {
   })
 })
 
+export const user = model('user', {
+  name: string().meta((is) => ({
+    create: is.required()
+  })),
+  email: string().email().meta((is) => ({
+    create: is.required()
+  })),
+  following: array().items(object({
+    model: string().valid('artwork', 'show'),
+    id: objectid()
+  }).meta({ name: 'Follow' }))
+})
+
 export const artwork = model('artwork', {
   title: string(),
   artistName: string(),

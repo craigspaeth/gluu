@@ -6,7 +6,7 @@ Seed the db using these GraphQL queries
 
 ```
 mutation {
-  show(
+  updateShow(
     _id: "57bbd22d3d82039cf2078382"
     artworkIds: [
       "57bbdb83a7fda320f9d1df8d"
@@ -24,7 +24,7 @@ mutation {
 }
 
 mutation {
-  artwork(
+  updateArtwork(
     _id: "57bbdb83a7fda320f9d1df8d"
     title: "Gran Cairo"
     date: "Thu Feb 01 1962 00:00:00 GMT-0500 (EST)"
@@ -38,9 +38,9 @@ mutation {
 }
 
 mutation {
-  partner(
+  updatePartner(
     _id: "57bbe5bdd64bf73600d70b59"
-    name: "De Young Museum"
+    name: "Modern Art Museum of Fort Worth"
   ) {
     _id
     name

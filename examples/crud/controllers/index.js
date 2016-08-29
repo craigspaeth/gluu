@@ -43,6 +43,7 @@ export const updateTweet = (e) => {
 }
 
 export const deleteTweet = async (id) => {
+  if (!window.confirm('Are you user?')) return
   await api.mutate(`{ tweet: deleteTweet(_id: "${id}") { body } }`)
   state.set('tweets', reject(state.get('tweets'), { _id: id }))
 }
@@ -51,7 +52,7 @@ export const createTweet = async (e) => {
   e.preventDefault()
   const { users } = await api.query('{ users { _id } }')
   await api.mutate(`{
-    tweet: tweet(
+    tweet: createTweet(
       body: "${state.get('body')}"
       userId: "${users[0]._id}"
     ) {

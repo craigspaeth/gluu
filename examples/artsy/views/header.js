@@ -1,10 +1,11 @@
 import { view as newview } from '../../../'
-import { state, followShowPartner } from '../controllers'
+import { state } from '../controllers'
 import { assign } from 'lodash'
 import { type, mediumMargin } from './lib'
+import Follow from './follow'
 
 const view = newview()
-const { h1, p, div, ul, h2, header, button } = view.els()
+const { h1, p, div, ul, h2, header, follow } = view.els({ follow: Follow })
 
 const section = {
   width: '50%',
@@ -29,7 +30,7 @@ view.styles({
   }),
   h2: assign(
     type('avantgarde', 'largeHeadline'),
-    { paddingTop: '13px' }
+    { top: '-4px', position: 'relative' }
   )
 })
 
@@ -44,8 +45,7 @@ view.render(() => {
             show.get('artworks').map((artwork) =>
               artwork.title))),
     div('.right',
-      h2('.h2', show.get('partner').name),
-      button({ onClick: followShowPartner }, 'Follow')))
+      h2('.h2', show.get('partner').name, follow())))
 })
 
 export default view()
