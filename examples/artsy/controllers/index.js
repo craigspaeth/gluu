@@ -4,13 +4,24 @@ import { find, remove, clone } from 'lodash'
 
 export const state = tree({
   show: {},
-  user: {}
+  user: {},
+  modalOpen: false
 })
 
 export const show = async (ctx) => {
   const { show, artworks, partner, user } = await ctx.bootstrap(async () => {
     const { show } = await api.query(`{ show(_id: "${ctx.params.id}") {
-      name description artworkIds partnerId _id
+      _id
+      name
+      description
+      artworkIds
+      partnerId
+      startAt
+      endAt
+      address {
+        city
+        street
+      }
     } }`)
     const { a, partner, user } = await api.query(`{
       a: artwork(_id: "${show.artworkIds[0]}") {
@@ -46,4 +57,8 @@ export const toggleFollow = async (model, id) => {
       following: [${followsStr}]
     ) { name }
   }`, { following })
+}
+
+export const toggleModal = async () => {
+  state.set('modalOpen', !state.get('modalOpen'))
 }

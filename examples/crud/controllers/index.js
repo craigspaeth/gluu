@@ -43,7 +43,7 @@ export const updateTweet = (e) => {
 }
 
 export const deleteTweet = async (id) => {
-  if (!window.confirm('Are you user?')) return
+  if (!window.confirm('Are you sure?')) return
   await api.mutate(`{ tweet: deleteTweet(_id: "${id}") { body } }`)
   state.set('tweets', reject(state.get('tweets'), { _id: id }))
 }

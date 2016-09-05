@@ -25,15 +25,20 @@ view.styles({
     padding: gutterSize
   }),
   h1: {
-    marginBottom: gutterSize
+    marginBottom: gutterSize,
+    color: 'red'
   },
-  input: Object.assign(type('sans')),
+  input: Object.assign(type('sans'), {
+    padding: '5px',
+    border: '1px solid #ccc',
+    outline: 'none'
+  }),
   btn: Object.assign(type('sansUpper'), {
     marginLeft: '10px',
     background: 'black',
     color: 'white',
     border: 'none',
-    padding: '5px 10px'
+    padding: '7px 20px'
   })
 })
 

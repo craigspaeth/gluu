@@ -3,13 +3,15 @@ import { mediumMargin, largeMargin } from './lib'
 import Header from './header'
 import Artwork from './artwork'
 import Nav from './nav'
+import Modal from './modal'
 import { state } from '../controllers'
 
 const view = newview()
-const { div, header, ul, li, artworkitem, nav } = view.els({
+const { div, header, ul, li, artworkitem, nav, modal } = view.els({
   header: Header,
   artworkitem: Artwork,
-  nav: Nav
+  nav: Nav,
+  modal: Modal
 })
 
 view.styles({
@@ -31,6 +33,7 @@ view.render(() => {
   return div(
     nav(),
     div('.container',
+      modal(),
       header(),
       ul('.ul',
         state.select('show').get('artworks').map((artwork) =>

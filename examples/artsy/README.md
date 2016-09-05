@@ -17,6 +17,18 @@ mutation {
     name: "Frank Stella: A Retrospective"
     description: "'Frank Stella: A Retrospective' highlights the transitions that connect aspects of Stella's diverse body of work, acknowledging the artist’s different phases but positioning them as pieces of a coherent whole."
     partnerId: "57bbe5bdd64bf73600d70b59"
+    startAt: "2016-04-17T12:00:00+00:00"
+    endAt: "2016-09-18T12:00:00+00:00"
+    address: {
+      street: "3200 Darnell Street"
+      city: "Fort Worth"
+      country: "US"
+      state: "TX"
+      coordinates: {
+        lng: -97
+        lat: 32
+      }
+    }
   ) {
     _id
     name

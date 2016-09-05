@@ -69,6 +69,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^6.1.2",
+    "moment": "^2.14.1",
     "should": "^11.1.0",
     "standard": "^7.1.2"
   }
