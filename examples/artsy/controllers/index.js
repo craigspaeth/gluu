@@ -7,6 +7,7 @@ export const state = tree({
   user: {},
   modalOpen: false
 })
+if (typeof window !== 'undefined') window.state = state
 
 export const show = async (ctx) => {
   const { show, artworks, partner, user } = await ctx.bootstrap(async () => {
