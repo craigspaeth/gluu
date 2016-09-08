@@ -1,13 +1,18 @@
-import { tree, api } from '../../../'
-import showView from '../views/index'
+import Lokka from 'lokka'
+import Transport from 'lokka-transport-http'
+import tree from 'universal-tree'
 import { find, remove, clone } from 'lodash'
+import showView from '../views/index'
+
+const api = new Lokka({
+  transport: new Transport('http://localhost:3000/api')
+})
 
 export const state = tree({
   show: {},
   user: {},
   modalOpen: false
 })
-if (typeof window !== 'undefined') window.state = state
 
 export const show = async (ctx) => {
   const { show, artworks, partner, user } = await ctx.bootstrap(async () => {
@@ -41,7 +46,7 @@ export const show = async (ctx) => {
   state.set('show', show)
   state.select('show').set('artworks', artworks)
   state.select('show').set('partner', partner)
-  ctx.render(showView, state)
+  ctx.render({ body: showView })
 }
 
 export const toggleFollow = async (model, id) => {

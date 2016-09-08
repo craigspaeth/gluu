@@ -1,4 +1,4 @@
-import { string, objectid, model, date } from '../../../'
+import { string, objectid, model, date } from 'joiql-mongo'
 
 export default model('artwork', {
   title: string(),

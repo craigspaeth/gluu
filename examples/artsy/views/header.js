@@ -1,11 +1,11 @@
-import { view as newview } from '../../../'
+import veact from 'veact'
 import { state, toggleModal } from '../controllers'
 import { assign } from 'lodash'
 import { type, mediumMargin } from './lib'
 import Follow from './follow'
 import moment from 'moment'
 
-const view = newview()
+const view = veact()
 const { h1, p, div, ul, h2, header, follow } = view.els({ follow: Follow })
 
 const section = {

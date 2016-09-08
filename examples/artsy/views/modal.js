@@ -1,8 +1,8 @@
-import { view as newview } from '../../../'
+import veact from 'veact'
 import { largeMargin, type } from './lib'
 import { state, toggleModal } from '../controllers'
 
-const view = newview()
+const view = veact()
 const { div, h3 } = view.els()
 const bg = (open) => ({
   background: 'rgba(0,0,0,0.7)',

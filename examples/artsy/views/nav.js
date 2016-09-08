@@ -1,11 +1,11 @@
-import { view as newview } from '../../../'
+import veact from 'veact'
 import { state } from '../controllers'
 import { assign } from 'lodash'
 import { type, smallMargin } from './lib'
 import { join } from 'path'
 import { readFileSync } from 'fs'
 
-const view = newview()
+const view = veact()
 const { nav, a } = view.els()
 const logo = readFileSync(join(__dirname, 'logo.svg'), 'utf8')
 

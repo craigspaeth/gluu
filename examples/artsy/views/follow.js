@@ -1,11 +1,11 @@
-import { view as newview } from '../../../'
-import { state, toggleFollow } from '../controllers'
-import { find, assign, uniqueId } from 'lodash'
+import veact from 'veact'
 import { join } from 'path'
 import { readFileSync } from 'fs'
+import { state, toggleFollow } from '../controllers'
+import { find, assign, uniqueId } from 'lodash'
 import { type, purpleRegular } from './lib'
 
-const view = newview()
+const view = veact()
 const { div, style } = view.els()
 const plus = readFileSync(join(__dirname, 'plus.svg'), 'utf8')
 

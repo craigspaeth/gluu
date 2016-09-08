@@ -1,9 +1,9 @@
-import { state, toggleFollow } from '../controllers'
-import { view as newview } from '../../../'
-import { type, graySemibold, purpleRegular } from './lib'
+import veact from 'veact'
 import { assign, find } from 'lodash'
+import { state, toggleFollow } from '../controllers'
+import { type, graySemibold, purpleRegular } from './lib'
 
-const view = newview()
+const view = veact()
 const { div, img, p, em } = view.els()
 
 const heart = (highlighted) =>

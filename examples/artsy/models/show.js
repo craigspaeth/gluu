@@ -1,4 +1,6 @@
-import { string, objectid, model, date, object, array, number } from '../../../'
+import {
+  string, objectid, model, date, object, array, number
+} from 'joiql-mongo'
 
 export default model('show', {
   name: string(),

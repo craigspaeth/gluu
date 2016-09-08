@@ -1,4 +1,4 @@
-import { string, objectid, model, object, array } from '../../../'
+import { string, objectid, model, object, array } from 'joiql-mongo'
 
 export default model('user', {
   name: string().meta((is) => ({

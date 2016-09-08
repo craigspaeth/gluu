@@ -91,5 +91,6 @@ module.exports = {
   graphqlize: graphqlize,
   isServer: isServer,
   isBrowser: isBrowser,
-  view: veact
+  view: veact,
+  browserify: browserify
 }

@@ -1,18 +1,15 @@
-import { graphqlize } from '../../'
+import convert from 'koa-convert'
+import graphqlHTTP from 'koa-graphql'
 import Koa from 'koa'
-import browserify from '../../lib/b-middlewware'
-import * as models from './models'
+import mongo from 'joiql-mongo'
 import router from './router'
+import * as models from './models'
 
 const app = new Koa()
+const api = mongo.models(...Object.values(models))
+const graphql = convert(graphqlHTTP({ schema: api.schema, graphiql: true }))
 
-router.all('/api', graphqlize(models))
+router.all('/api', graphql)
 app.use(router.routes())
-app.use(browserify({ src: __dirname }))
-
-if (require.main === module) {
-  app.listen(3000)
-  console.log('Listening')
-}
 
 export default app
