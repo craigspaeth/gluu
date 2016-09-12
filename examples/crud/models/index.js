@@ -1,4 +1,4 @@
-import { string, objectid, model, array } from '../../../'
+import { string, objectid, model, array } from 'joiql-mongo'
 
 export const tweet = model('tweet', {
   userId: objectid(),

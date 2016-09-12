@@ -1,0 +1,21 @@
+{
+  "name": "hotglue",
+  "version": "1.0.0",
+  "description": "Wrap a Koa and Browserify app for hot reloading convenience.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -r should ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/craigspaeth/hotglue"
+  },
+  "keywords": [
+    "hot",
+    "reload",
+    "koa",
+    "browserify"
+  ],
+  "author": "Craig Spaeth",
+  "license": "MIT"
+}

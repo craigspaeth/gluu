@@ -1,8 +1,14 @@
-import { tree, api } from '../../../'
+import Lokka from 'lokka'
+import Transport from 'lokka-transport-http'
+import tree from 'universal-tree'
 import tweetsView from '../views/tweets'
 import tweetView from '../views/tweet'
 import newTweetView from '../views/new-tweet'
 import { reject } from 'lodash'
+
+const api = new Lokka({
+  transport: new Transport('http://localhost:3000/tweets/api')
+})
 
 export const state = tree({
   tweets: [],
@@ -16,7 +22,7 @@ export const list = async (ctx) => {
     api.query('{ tweets { body _id } }')
   )
   state.set('tweets', tweets)
-  ctx.render(tweetsView, state)
+  ctx.render({ body: tweetsView })
 }
 
 export const show = async (ctx) => {
@@ -31,11 +37,11 @@ export const show = async (ctx) => {
   })
   state.set('tweet', tweet)
   state.set('user', user)
-  ctx.render(tweetView, state)
+  ctx.render({ body: tweetView })
 }
 
 export const newTweet = async (ctx) => {
-  ctx.render(newTweetView, state)
+  ctx.render({ body: newTweetView })
 }
 
 export const updateTweet = (e) => {

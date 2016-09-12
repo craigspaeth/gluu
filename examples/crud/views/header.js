@@ -1,7 +1,7 @@
-import { view as newview } from '../../../'
+import veact from 'veact'
 import { type, gutterSize } from './lib'
 
-const view = newview()
+const view = veact()
 const { header, a } = view.els()
 
 view.render(() =>

@@ -5,14 +5,20 @@ import { find, remove, clone } from 'lodash'
 import showView from '../views/index'
 
 const api = new Lokka({
-  transport: new Transport('http://localhost:3000/api')
+  transport: new Transport('http://localhost:3000/shows/api')
 })
 
-export const state = tree({
+const prevState = (
+  typeof window !== 'undefined' &&
+  window.state &&
+  window.state.get()
+)
+export const state = tree(prevState || {
   show: {},
   user: {},
   modalOpen: false
 })
+if (typeof window !== 'undefined') window.state = state
 
 export const show = async (ctx) => {
   const { show, artworks, partner, user } = await ctx.bootstrap(async () => {

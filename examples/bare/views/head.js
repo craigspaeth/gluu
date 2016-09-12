@@ -1,8 +1,6 @@
-module.exports = `/* http://meyerweb.com/eric/tools/css/reset/
-   v2.0 | 20110126
-   License: none (public domain)
-*/
+import veact from 'veact'
 
+const reset = `
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -51,3 +49,9 @@ table {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }`
+const view = veact()
+const { style } = view.els()
+
+view.render(() => style({ dangerouslySetInnerHTML: { __html: reset } }))
+
+export default view()

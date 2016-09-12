@@ -1,9 +1,9 @@
-import { view as newview } from '../../../'
+import veact from 'veact'
 import { state, deleteTweet } from '../controllers'
 import Header from './header'
 import { type, gutterSize } from './lib'
 
-const view = newview()
+const view = veact()
 const { ul, li, div, a, header } = view.els({ header: Header })
 
 view.render(() =>

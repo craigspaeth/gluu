@@ -1,32 +1,21 @@
-import { view as newview } from '../../../'
+import veact from 'veact'
 import { createTweet, updateTweet } from '../controllers'
 import { gutterSize, type } from './lib'
 import Header from './header'
 
-const view = newview()
+const view = veact()
 const { div, h1, input, button, form, header } = view.els({ header: Header })
 
 view.on('componentDidMount', ({ refs }) => {
   refs.input.focus()
 })
 
-view.render(() =>
-  div(
-    header(),
-    div('.container',
-      h1('.h1', 'New Tweet'),
-      form({ onSubmit: createTweet },
-        input('.input', { onChange: updateTweet, ref: 'input' }),
-        button('.btn', 'Send'))))
-)
-
 view.styles({
   container: Object.assign(type('sans'), {
     padding: gutterSize
   }),
   h1: {
-    marginBottom: gutterSize,
-    color: 'red'
+    marginBottom: gutterSize
   },
   input: Object.assign(type('sans'), {
     padding: '5px',
@@ -41,5 +30,15 @@ view.styles({
     padding: '7px 20px'
   })
 })
+
+view.render(() =>
+  div(
+    header(),
+    div('.container',
+      h1('.h1', 'New Tweet'),
+      form({ onSubmit: createTweet },
+        input('.input', { onChange: updateTweet, ref: 'input' }),
+        button('.btn', 'Send'))))
+)
 
 export default view()
